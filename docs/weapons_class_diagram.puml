@@ -1,0 +1,71 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+abstract class Weapon {
+  # name : string
+  # baseDamage : int
+  # range : float
+  # ammo : int
+  # maxAmmo : int
+  - {static} s_shotsFired : int
+  - {static} s_totalDamageDealt : int
+  - {static} s_weaponsAlive : int
+  + attack(attacker : Player, target : Player) : AttackResult
+  + reload() : bool
+  + {abstract} calculateDamage(distance : float) : int
+  + {abstract} getWeaponType() : string
+  + {abstract} clone() : unique_ptr<Weapon>
+  + expectedDamage(distance : float) : float
+  + getReloadTime() : float
+  + getAttackVerb() : string
+  + addAmmo(rounds : int) : int
+}
+
+class Gun {
+  # reloadTime : float
+  + calculateDamage(distance : float) : int
+}
+class Shotgun {
+  - pelletDamage : int
+  - pellets : int
+  + calculateDamage(distance : float) : int
+}
+class SniperRifle {
+  - critChance : float
+  - critMultiplier : float
+  - minEffectiveRange : float
+  + calculateDamage(distance : float) : int
+}
+class MeleeWeapon {
+  + calculateDamage(distance : float) : int
+}
+
+class Loadout {
+  - owner : Player*
+  - slots : unique_ptr<Weapon>[2]
+  - activeSlot : int
+  + equipPrimary(w : unique_ptr<Weapon>)
+  + equipSecondary(w : unique_ptr<Weapon>)
+  + switchWeapon() : bool
+  + attack(target : Player*) : AttackResult
+  + reload() : bool
+}
+
+struct AttackResult {
+  + success : bool
+  + damageDealt : int
+  + targetEliminated : bool
+  + message : string
+}
+
+abstract class Player <<Member 1>>
+
+Weapon <|-- Gun
+Gun <|-- Shotgun
+Weapon <|-- SniperRifle
+Weapon <|-- MeleeWeapon
+Loadout *-- "0..2" Weapon : owns (composition)
+Loadout o-- "1" Player : owner (association)
+Weapon ..> Player : uses (association)
+Weapon ..> AttackResult : returns
+@enduml
