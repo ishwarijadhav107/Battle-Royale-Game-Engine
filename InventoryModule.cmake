@@ -17,3 +17,8 @@ enable_testing()
 add_executable(inventory_tests tests/inventory_tests.cpp)
 target_link_libraries(inventory_tests PRIVATE InventoryLib)
 add_test(NAME InventoryTests COMMAND inventory_tests)
+add_executable(inventory_demo
+    tests/inventory_demo.cpp
+)
+
+target_link_libraries(inventory_demo PRIVATE InventoryLib)
