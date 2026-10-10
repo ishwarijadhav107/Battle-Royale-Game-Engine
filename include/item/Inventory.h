@@ -6,11 +6,12 @@
 class Item;
 class Player;
 
-/**
- * @brief Manages items carried by a player.
- *
- * Demonstrates aggregation with Item objects.
- */
+   /**
+    * @brief Manages items carried by a player.
+    *
+    * Demonstrates composition: the inventory owns its items and
+    * deletes them in its destructor.
+    */
 class Inventory {
 private:
     std::vector<Item*> items;
